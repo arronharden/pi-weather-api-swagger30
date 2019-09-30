@@ -1,0 +1,27 @@
+{
+  "name": "pi-weather-api-swagger30",
+  "version": "1.0.0",
+  "description": "OpenAPI 3.0 (aka Swagger 3.0) documentation for the pi-weather-app",
+  "scripts": {
+    "start": "bin/www"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arronharden/pi-weather-api-swagger30.git"
+  },
+  "author": {
+    "name": "Arron Harden",
+    "email": "post@arronharden.com",
+    "url": "https://arronharden.com"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/arronharden/pi-weather-api-swagger30/issues"
+  },
+  "homepage": "https://github.com/arronharden/pi-weather-api-swagger30#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "swagger-ui-express": "^4.1.1",
+    "yargs": "^14.0.0"
+  }
+}

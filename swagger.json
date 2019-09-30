@@ -1,0 +1,356 @@
+{
+	"openapi": "3.0.0",
+	"info": {
+		"description": "The Raspberry Pi weather service allows sensor measurements to be persisted\nby instances collecting the data, and retrieved back again by a dashboard\nuser-interface or other reporting tool.",
+		"version": "1.0.0",
+		"title": "Raspberry Pi weather service",
+		"contact": {
+			"email": "post@arronharden.com"
+		},
+		"license": {
+			"name": "Apache 2.0",
+			"url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+		}
+	},
+	"tags": [
+		{
+			"name": "Sensors",
+			"description": "Manage information about the sensors reporting measurements."
+		},
+		{
+			"name": "Measurements",
+			"description": "Manage the measurements made by sensors."
+		}
+	],
+	"security": [
+		{
+			"weather_service_auth": []
+		}
+	],
+	"paths": {
+		"/sensors": {
+			"get": {
+				"tags": [
+					"Sensors"
+				],
+				"summary": "Gets the list of sensors.",
+				"description": "Gets details of all the sensors which have provided measurements.",
+				"operationId": "getSensors",
+				"responses": {
+					"200": {
+						"description": "Success.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/Sensor"
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/sensors/{sensorId}/measurements": {
+			"get": {
+				"tags": [
+					"Measurements"
+				],
+				"summary": "Get the measurements for the specified sensor.",
+				"description": "Get the measurements within the specified time range for the sensor. If\nno time range is supplied the default behaviour will be to return the\nmeasurements for the previous 24 hours.",
+				"operationId": "getMeasurements",
+				"parameters": [
+					{
+						"name": "sensorId",
+						"in": "path",
+						"description": "The ID of the sensor to which the measurement relates.",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "fromDate",
+						"in": "query",
+						"description": "The timestamp for the beginning of the date range to get the\nmeasurements for (in format YYYY-MM-DDTHH:mm:ssZ or\nYYYY-MM-DDTHH:mm:ss.sssZ, matching the date-time format as specified\nby RFC 3339). If not specified will default to 24 hours before the\ntoDate parameter.",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"format": "date-time"
+						}
+					},
+					{
+						"name": "toDate",
+						"in": "query",
+						"description": "The timestamp for the end of the date range to get the measurements\nfor (in format YYYY-MM-DDTHH:mm:ssZ or YYYY-MM-DDTHH:mm:ss.sssZ,\nmatching the date-time format as specified by RFC 3339). If not\nspecified will default to now.",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"format": "date-time"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Success.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/Measurement"
+									}
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": [
+					"Measurements"
+				],
+				"summary": "Add a new measurement for the specified sensor.",
+				"description": "Add a new measurement for the specified sensor into the persistent store.",
+				"operationId": "addMeasurement",
+				"parameters": [
+					{
+						"name": "sensorId",
+						"in": "path",
+						"description": "The ID of the sensor which is reporting the measurement.",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/Measurement"
+							}
+						}
+					},
+					"description": "The measurement to store.",
+					"required": true
+				},
+				"responses": {
+					"202": {
+						"description": "Accepted"
+					}
+				}
+			}
+		},
+		"/sensors/{sensorId}/measurements/summary": {
+			"get": {
+				"tags": [
+					"Measurements"
+				],
+				"summary": "Get a summary of measurements for the specified sensor.",
+				"description": "Get a summary (e.g. minimum, maximum, average) of the measurements\nwithin the specified time range for the sensor. If no time range is\nsupplied the default behaviour will be to return the measurements for\nthe previous 24 hours.",
+				"operationId": "getSummaryMeasurements",
+				"parameters": [
+					{
+						"name": "sensorId",
+						"in": "path",
+						"description": "The ID of the sensor to which the measurement summary relates.",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "fromDate",
+						"in": "query",
+						"description": "The timestamp for the beginning of the date range to get the\nmeasurement summary for (in format YYYY-MM-DDTHH:mm:ssZ or\nYYYY-MM-DDTHH:mm:ss.sssZ, matching the date-time format as specified\nby RFC 3339). If not specified will default to 24 hours before the\ntoDate parameter.",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"format": "date-time"
+						}
+					},
+					{
+						"name": "toDate",
+						"in": "query",
+						"description": "The timestamp for the end of the date range to get the measurement\nsummary for (in format YYYY-MM-DDTHH:mm:ssZ or\nYYYY-MM-DDTHH:mm:ss.sssZ, matching the date-time format as specified\nby RFC 3339). If not specified will default to now.",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"format": "date-time"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Success.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/MeasurementSummary"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"servers": [
+		{
+			"url": "https://localhost/v1"
+		}
+	],
+	"components": {
+		"securitySchemes": {
+			"weather_service_auth": {
+				"type": "apiKey",
+				"name": "Authorization",
+				"in": "header"
+			}
+		},
+		"schemas": {
+			"Measurement": {
+				"type": "object",
+				"properties": {
+					"humidity": {
+						"$ref": "#/components/schemas/MeasurementTypeHumidity"
+					},
+					"pressure": {
+						"$ref": "#/components/schemas/MeasurementTypePressure"
+					},
+					"temperature": {
+						"$ref": "#/components/schemas/MeasurementTypeTemperature"
+					},
+					"timestamp": {
+						"$ref": "#/components/schemas/Timestamp"
+					}
+				}
+			},
+			"MeasurementSummary": {
+				"type": "object",
+				"properties": {
+					"humidity": {
+						"type": "object",
+						"properties": {
+							"average": {
+								"$ref": "#/components/schemas/MeasurementTypeHumidity"
+							},
+							"latest": {
+								"$ref": "#/components/schemas/MeasurementTypeHumidityWithTimestamp"
+							},
+							"minimum": {
+								"$ref": "#/components/schemas/MeasurementTypeHumidityWithTimestamp"
+							},
+							"maximum": {
+								"$ref": "#/components/schemas/MeasurementTypeHumidityWithTimestamp"
+							}
+						}
+					},
+					"pressure": {
+						"type": "object",
+						"properties": {
+							"average": {
+								"$ref": "#/components/schemas/MeasurementTypePressure"
+							},
+							"latest": {
+								"$ref": "#/components/schemas/MeasurementTypePressureWithTimestamp"
+							},
+							"minimum": {
+								"$ref": "#/components/schemas/MeasurementTypePressureWithTimestamp"
+							},
+							"maximum": {
+								"$ref": "#/components/schemas/MeasurementTypePressureWithTimestamp"
+							}
+						}
+					},
+					"temperature": {
+						"type": "object",
+						"properties": {
+							"average": {
+								"$ref": "#/components/schemas/MeasurementTypeTemperature"
+							},
+							"latest": {
+								"$ref": "#/components/schemas/MeasurementTypeTemperatureWithTimestamp"
+							},
+							"minimum": {
+								"$ref": "#/components/schemas/MeasurementTypeTemperatureWithTimestamp"
+							},
+							"maximum": {
+								"$ref": "#/components/schemas/MeasurementTypeTemperatureWithTimestamp"
+							}
+						}
+					}
+				}
+			},
+			"MeasurementTypeHumidity": {
+				"type": "number",
+				"format": "double",
+				"example": 65.32
+			},
+			"MeasurementTypeHumidityWithTimestamp": {
+				"type": "object",
+				"properties": {
+					"timestamp": {
+						"$ref": "#/components/schemas/Timestamp"
+					},
+					"value": {
+						"$ref": "#/components/schemas/MeasurementTypeHumidity"
+					}
+				}
+			},
+			"MeasurementTypePressure": {
+				"type": "number",
+				"format": "double",
+				"example": 1012.41
+			},
+			"MeasurementTypePressureWithTimestamp": {
+				"type": "object",
+				"properties": {
+					"timestamp": {
+						"$ref": "#/components/schemas/Timestamp"
+					},
+					"value": {
+						"$ref": "#/components/schemas/MeasurementTypePressure"
+					}
+				}
+			},
+			"MeasurementTypeTemperature": {
+				"type": "number",
+				"format": "double",
+				"example": 21.44
+			},
+			"MeasurementTypeTemperatureWithTimestamp": {
+				"type": "object",
+				"properties": {
+					"timestamp": {
+						"$ref": "#/components/schemas/Timestamp"
+					},
+					"value": {
+						"$ref": "#/components/schemas/MeasurementTypeTemperature"
+					}
+				}
+			},
+			"Sensor": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string",
+						"example": "bme280-attic"
+					},
+					"alias": {
+						"type": "string",
+						"example": "Attic"
+					}
+				}
+			},
+			"Timestamp": {
+				"type": "string",
+				"format": "date-time",
+				"example": "2019-09-30T12:41:07.894Z"
+			}
+		}
+	}
+}
