@@ -1,0 +1,4 @@
+{
+    "basePackage":"org.piweather.app",
+    "configPackage":"org.piweather.app.config"
+}

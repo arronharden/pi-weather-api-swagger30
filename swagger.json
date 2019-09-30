@@ -1,5 +1,5 @@
 {
-	"openapi": "3.0.0",
+	"openapi": "3.0.2",
 	"info": {
 		"description": "The Raspberry Pi weather service allows sensor measurements to be persisted\nby instances collecting the data, and retrieved back again by a dashboard\nuser-interface or other reporting tool.",
 		"version": "1.0.0",
