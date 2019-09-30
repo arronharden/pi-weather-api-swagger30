@@ -200,15 +200,20 @@
 	},
 	"servers": [
 		{
-			"url": "https://localhost/v1"
+			"url": "https://localhost/v1",
+			"description": "Local development server"
+		},
+		{
+			"url": "https://someotherhost.com/v1",
+			"description": "Production server"
 		}
 	],
 	"components": {
 		"securitySchemes": {
 			"weather_service_auth": {
-				"type": "apiKey",
-				"name": "Authorization",
-				"in": "header"
+				"type": "http",
+				"scheme": "bearer",
+				"bearerFormat": "JWT"
 			}
 		},
 		"schemas": {
