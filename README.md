@@ -16,7 +16,7 @@ npm start -- --port=80
 To generate server code stubs which make use of the Spring framework use:
 
 ```
-swagger-codegen generate -i ./swagger.json -l spring -o ../pi-weather-app-spring -c ./swagger-codegen-spring-options.json
+npn run codegen
 ```
 
-(ensuring the `swagger-codegen` is installed and any pre-requisites are satisfied - see https://github.com/swagger-api/swagger-codegen).
+This will create the Spring enabled Java project at `../pi-weather-app-spring`.

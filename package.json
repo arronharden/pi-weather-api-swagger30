@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "OpenAPI 3.0 (aka Swagger 3.0) documentation for the pi-weather-app",
   "scripts": {
-    "start": "bin/www"
+    "start": "bin/www",
+    "codegen": "codegen/codegen.sh"
   },
   "repository": {
     "type": "git",
