@@ -22,7 +22,7 @@
   "homepage": "https://github.com/arronharden/pi-weather-api-swagger30#readme",
   "dependencies": {
     "express": "^4.18.2",
-    "swagger-ui-express": "^4.1.1",
+    "swagger-ui-express": "^4.6.0",
     "yargs": "^14.0.0"
   }
 }
